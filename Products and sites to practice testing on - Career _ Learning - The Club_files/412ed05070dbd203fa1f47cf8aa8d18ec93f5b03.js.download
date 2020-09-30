@@ -1,0 +1,6 @@
+
+$("#main").on('click', 'a.ad-test', function(e) {
+    var target = $(e.target);
+    ga('send', 'event', target.data('event'), 'click');
+})
+

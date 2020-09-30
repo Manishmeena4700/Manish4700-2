@@ -1,0 +1,12 @@
+(function() {
+  if ('Discourse' in window && Discourse.__container__) {
+    Discourse.__container__
+      .lookup("service:theme-settings")
+      .registerSettings(5, {"brand_name":"MoT","website_url":"https://ministryoftesting.com","logo_url":"https://aws1.discourse-cdn.com/standard10/uploads/ministryoftesting/original/2X/3/3650e1d805221d2a5444ca87c6adb4499d10169d.svg","mobile_logo_url":"https://aws1.discourse-cdn.com/standard10/uploads/ministryoftesting/original/2X/3/3650e1d805221d2a5444ca87c6adb4499d10169d.svg","links":"","icons":"graduation-cap,https://www.ministryoftesting.com/dojo/catalog, Learn|calendar-alt,https://ministryoftesting.com/events, Events|comments,https://club.ministryoftesting.com, Community","custom_font_awesome_icons":""});
+  }
+})();
+(function() {
+  if ('Ember' in window) {
+    Ember.TEMPLATES["/connectors/above-site-header/brand-header"] = Ember.HTMLBars.template({"id":null,"block":"{\"symbols\":[],\"statements\":[[0,\"\\n  \"],[1,[28,\"mount-widget\",null,[[\"widget\"],[\"brand-header\"]]],false],[0,\"\\n\"]],\"hasEval\":false}","meta":{}});
+  }
+})();

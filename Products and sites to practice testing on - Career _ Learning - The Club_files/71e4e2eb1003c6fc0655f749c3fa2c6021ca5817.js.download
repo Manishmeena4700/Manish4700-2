@@ -1,0 +1,189 @@
+(function() {
+  if ('Discourse' in window && Discourse.__container__) {
+    Discourse.__container__
+      .lookup("service:theme-settings")
+      .registerSettings(5, {"brand_name":"MoT","website_url":"https://ministryoftesting.com","logo_url":"https://aws1.discourse-cdn.com/standard10/uploads/ministryoftesting/original/2X/3/3650e1d805221d2a5444ca87c6adb4499d10169d.svg","mobile_logo_url":"https://aws1.discourse-cdn.com/standard10/uploads/ministryoftesting/original/2X/3/3650e1d805221d2a5444ca87c6adb4499d10169d.svg","links":"","icons":"graduation-cap,https://www.ministryoftesting.com/dojo/catalog, Learn|calendar-alt,https://ministryoftesting.com/events, Events|comments,https://club.ministryoftesting.com, Community","custom_font_awesome_icons":""});
+  }
+})();
+(function () {
+  if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+    var __theme_name__ = "Brand Header Theme Component";
+
+    var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(5);
+
+    var themePrefix = function themePrefix(key) {
+      return "theme_translations.5.".concat(key);
+    };
+
+    Discourse._registerPluginCode('0.8', function (api) {
+      try {
+        var _require = require('virtual-dom'),
+            h = _require.h;
+
+        var _require2 = require('discourse/widgets/widget'),
+            applyDecorators = _require2.applyDecorators;
+
+        var flatten = function flatten(array) {
+          return [].concat.apply([], array);
+        };
+
+        api.createWidget('nav-links', {
+          tagName: 'nav.links',
+          html: function html(attrs) {
+            var links = [].concat(attrs.contents());
+            return [h('ul.nav.nav-pills', links.map(function (l) {
+              return h('li', {}, l);
+            }))];
+          }
+        });
+        api.createWidget('nav-icons', {
+          tagName: 'ul.icons.clearfix',
+          html: function html(attrs) {
+            var links = [].concat(attrs.contents());
+            return links.map(function (l) {
+              return h('li', {}, l);
+            });
+          }
+        });
+        api.createWidget('brand-header-right', {
+          tagName: 'div.panel.clearfix',
+          html: function html(attrs) {
+            return attrs.contents();
+          }
+        });
+        api.createWidget('brand-header', {
+          tagName: 'header.b-header.clearfix',
+          buildKey: function buildKey() {
+            return "header";
+          },
+          generalLinks: function generalLinks() {
+            var _this = this;
+
+            var links = settings.links;
+
+            if (links) {
+              return links.split("|").map(function (l) {
+                var values = l.split(",");
+                return _this.attach('link', {
+                  rawLabel: values[0].trim(),
+                  href: values[1].trim(),
+                  omitSpan: true,
+                  attributes: {
+                    target: (values[2] || '').trim()
+                  }
+                });
+              });
+            } else {
+              return [];
+            }
+          },
+          iconLinks: function iconLinks() {
+            var _this2 = this;
+
+            var icons = settings.icons;
+
+            if (icons) {
+              return icons.split("|").map(function (l) {
+                var values = l.split(",");
+                return _this2.attach('link', {
+                  icon: values[0].trim(),
+                  href: values[1].trim(),
+                  rawLabel: values[2].trim(),
+                  omitSpan: true,
+                  attributes: {
+                    target: (values[3] || '').trim()
+                  }
+                });
+              });
+            } else {
+              return [];
+            }
+          },
+          html: function html(attrs, state) {
+            var _this3 = this;
+
+            var siteSettings = this.siteSettings;
+            var mobileView = this.site.mobileView;
+            var contents = [];
+            contents.push(this.attach('brand-logo'));
+            var panelContents = [];
+            contents.push(this.attach('nav-links', {
+              contents: function contents() {
+                return _this3.generalLinks();
+              }
+            }));
+            panelContents.push(this.attach('nav-icons', {
+              contents: function contents() {
+                return _this3.iconLinks();
+              }
+            }));
+            contents.push(this.attach('brand-header-right', {
+              contents: function contents() {
+                return panelContents;
+              }
+            }));
+            return h('div.wrap', h('div.contents.clearfix', contents));
+          }
+        });
+
+        var _require3 = require('discourse/lib/intercept-click'),
+            wantsNewWindow = _require3.wantsNewWindow;
+
+        var DiscourseURL = require('discourse/lib/url').default;
+
+        api.createWidget('brand-logo', {
+          tagName: 'div.title',
+          logo: function logo() {
+            var mobileView = this.site.mobileView;
+            var mobileLogoUrl = settings.mobile_logo_url || "";
+            var showMobileLogo = mobileView && mobileLogoUrl.length > 0;
+            var logoUrl = settings.logo_url || "";
+            var title = settings.brand_name;
+
+            if (showMobileLogo) {
+              return h('img#brand-logo.logo-big', {
+                key: 'logo-mobile',
+                attributes: {
+                  src: mobileLogoUrl,
+                  alt: title
+                }
+              });
+            } else if (logoUrl.length) {
+              return h('img#brand-logo.logo-big', {
+                key: 'logo-big',
+                attributes: {
+                  src: logoUrl,
+                  alt: title
+                }
+              });
+            } else {
+              return h('h2#brand-text-logo.text-logo', {
+                key: 'logo-text'
+              }, title);
+            }
+          },
+          html: function html() {
+            return h('a', {
+              attributes: {
+                href: settings.website_url
+              }
+            }, this.logo());
+          },
+          click: function click(e) {
+            if (wantsNewWindow(e)) {
+              return false;
+            }
+
+            e.preventDefault();
+            DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+            return false;
+          }
+        });
+      } catch (err) {
+        var rescue = require("discourse/lib/utilities").rescueThemeError;
+
+        rescue(__theme_name__, err, api);
+      }
+    });
+  }
+})();

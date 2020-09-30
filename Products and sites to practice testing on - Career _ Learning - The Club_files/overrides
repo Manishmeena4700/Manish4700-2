@@ -1,0 +1,2 @@
+I18n._mfOverrides = {};
+I18n._overrides = {"js.logout":"You were logged out. Returning to The Dojo.","js.user.log_out":"Sign Out","admin_js.admin.user.log_out":"Sign Out"};
